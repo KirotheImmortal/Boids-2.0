@@ -18,6 +18,7 @@ public class Boid_Stats : MonoBehaviour
     public Vector3 velocity;
 
 
+
     // Use this for initialization
     void Start()
     {
@@ -36,7 +37,7 @@ public class Boid_Stats : MonoBehaviour
     {          
             gameObject.GetComponent<Transform>().position += velocity;
 
-            gameObject.GetComponent<Transform>().forward += new Vector3(velocity.normalized.x + .000001f, velocity.normalized.y + .000001f, velocity.normalized.z + .000001f);
+            gameObject.GetComponent<Transform>().forward += new Vector3(velocity.normalized.x + .00001f, velocity.normalized.y + .00001f, velocity.normalized.z + .00001f);
             gameObject.GetComponent<Boid_Stats>().velocity = (gameObject.GetComponent<Boid_Stats>().velocity.normalized * .5f);
         
     }

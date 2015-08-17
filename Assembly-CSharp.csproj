@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\_Scripts\Boid_Stats.cs" />
      <Compile Include="Assets\_Scripts\Boid_System.cs" />
+     <Compile Include="Assets\_Scripts\CameraButton.cs" />
+     <Compile Include="Assets\_Scripts\ExitButton.cs" />
      <Compile Include="Assets\_Scripts\NewBoidsSystem.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

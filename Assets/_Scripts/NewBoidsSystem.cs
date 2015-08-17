@@ -63,24 +63,25 @@ public class NewBoidsSystem : MonoBehaviour
             foreach(GameObject b in go_boids)
                 if (b.GetComponent<Boid_Stats>().Flock)
                 {
+                    Vector3 test = b.GetComponent<Boid_Stats>().velocity;
 
                     if (b.GetComponent<Boid_Stats>().Cohesion)
-                        b.GetComponent<Boid_Stats>().velocity += Cohesion(b);
+                       test += Cohesion(b);
                     if (b.GetComponent<Boid_Stats>().Seperation)
-                       b.GetComponent<Boid_Stats>().velocity += Seperation(b);
+                       test += Seperation(b);
                     if (b.GetComponent<Boid_Stats>().Allign)
-                        b.GetComponent<Boid_Stats>().velocity += Allignment(b);
+                        test += Allignment(b);
                     if (b.GetComponent<Boid_Stats>().Boxed)
-                       b.GetComponent<Boid_Stats>().velocity += BoundryRekt(b);
+                        test += BoundryRekt(b);
                 
 
 
 
-                    VelocityLimit(b);
+                    test = VelocityLimit(b,test);
+                    b.GetComponent<Boid_Stats>().velocity = test;
 
-
-                    b.GetComponent<LineRenderer>().SetPosition(0, b.GetComponent<Transform>().position);
-                    b.GetComponent<LineRenderer>().SetPosition(1, b.GetComponent<Transform>().position + b.GetComponent<Boid_Stats>().velocity * 10);
+                   // b.GetComponent<LineRenderer>().SetPosition(0, b.GetComponent<Transform>().position);
+                   // b.GetComponent<LineRenderer>().SetPosition(1, b.GetComponent<Transform>().position + b.GetComponent<Boid_Stats>().velocity * 10);
                     //  go_boids[i]
 
 
@@ -237,16 +238,17 @@ public class NewBoidsSystem : MonoBehaviour
     /// reduces the velocity if it exseds a set value
     /// </summary>
     /// <param name="c_boid"></param>
-    void VelocityLimit(GameObject c_boid)
+    Vector3 VelocityLimit(GameObject c_boid, Vector3 vel)
     {
         if (l_vel > 0)
         {
-            if (Vec3Mag(c_boid.GetComponent<Boid_Stats>().velocity) > l_vel)
-                c_boid.GetComponent<Boid_Stats>().velocity = Vec3Normalize(c_boid.GetComponent<Boid_Stats>().velocity) * (l_vel/10);
+            if (Vec3Mag(vel) > l_vel)
+                return Vec3Normalize(vel) * (l_vel / 10);
+            else return vel;
         }
 
 
-        else c_boid.GetComponent<Boid_Stats>().velocity = Vector3.zero;
+        else return Vector3.zero;
     }
 
 
