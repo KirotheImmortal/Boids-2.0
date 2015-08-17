@@ -57,6 +57,12 @@ public class NewBoidsSystem : MonoBehaviour
         SliderUpdates();
         BoidUpdate();
     }
+    /// <summary>
+    /// Updates boids velocity by calling the rule functions
+    /// 
+    /// Inserts the predicted velocity into "Test" then checks to see if it needs limitation then makes test the boids new velocity
+    /// 
+    /// </summary>
     void BoidUpdate()
     {
         if (go_boids.Count > 1)
@@ -89,6 +95,9 @@ public class NewBoidsSystem : MonoBehaviour
                 }
       }
 
+    /// <summary>
+    /// Keeps track of Slider values to change script values based on corresponding values
+    /// </summary>
     void SliderUpdates()
     {
         s_coh = CohSlider.GetComponent<Slider>().value;
@@ -98,7 +107,9 @@ public class NewBoidsSystem : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Instantiates gameobjects based on a delta timer
+    /// </summary>
     void Spawning()
     {
         if (t_time < t_spawn)
@@ -126,7 +137,7 @@ public class NewBoidsSystem : MonoBehaviour
     Vector3 Cohesion(GameObject c_boid)
     {
         if (predignorPercievedCenter(c_boid) != Vector3.zero)
-            return ((predignorPercievedCenter(c_boid) - c_boid.GetComponent<Transform>().position)) * s_coh / 100;
+            return ((predignorPercievedCenter(c_boid) - c_boid.GetComponent<Transform>().position)) * s_coh / 100; // Calls on a fucntion to cal percieved center and uses the difference between it and current boids pos to get a velocity to it.
 
         else return Vector3.zero;
     }
@@ -137,34 +148,32 @@ public class NewBoidsSystem : MonoBehaviour
         Vector3 r_vec = Vector3.zero;
 
         foreach (GameObject b in go_boids)
-            if (Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_sep)
-                r_vec -= (b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position);
+            if (Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_sep)//if(the absalute distance between current boid and boid in check is less then distance threshold(d_sep))
+                r_vec -= (b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position); // finds the differents between current boid and boid its too close to
 
 
-        return r_vec * s_sep / 100;
+        return r_vec * s_sep / 100; //returns the velocity the boid will need to correct its mistake
 
     }
     /// <param name="c_boid"></param>
     /// <returns>Returns a value that is in the same Velocity as the nearby boids</returns>
     Vector3 Allignment(GameObject c_boid)
     {
-        Vector3 r_vec = Vector3.zero;
+        Vector3 r_vec = Vector3.zero; 
 
         int n = 0;
         foreach (GameObject b in go_boids)
             if (b != c_boid && !b.GetComponent<Boid_Stats>().Preditor)
-                if ((Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_allign))
+                if ((Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_allign)) //if(abs distance bettween current boid and boid in check is less then allign thresh(d_allign)
                 {
-                    r_vec += b.GetComponent<Boid_Stats>().velocity;
-                    n++;
+                    r_vec += b.GetComponent<Boid_Stats>().velocity; // adds the velocity to the return value
+                    n++;//incraments the number of times velocities where added
                 }
 
-        if (n > 0)
-            r_vec /= n;
-        else r_vec = new Vector3(0, 0, 0);
-
-
-        return r_vec;
+        if (n > 0)//Check to make sure there will not be a division by 0 error(causes infinity)
+            r_vec /= n; // gets the average velocity using then number of times N was incramented
+       
+        return r_vec; // If you didnt notice this will return Vector3.Zero if the n was never incramented.
     }
 
     /// <summary>
@@ -172,11 +181,13 @@ public class NewBoidsSystem : MonoBehaviour
     /// </summary>
     /// <param name="c_boid"></param>
     /// <returns></returns>
-
     Vector3 BoundryRekt(GameObject c_boid)
     {
 
-        Vector3 r_vec = Vector3.zero;
+        Vector3 r_vec = Vector3.zero; 
+        // I will insert the summery here: All the if statements ask if the distance between the boid and center(go this script is attached to) is larger then 
+        // the box size variable
+        // if it is it will add the needed path into the return variable
 
         if (c_boid.GetComponent<Transform>().position.x > (gameObject.GetComponent<Transform>().position.x + boundry))
         {
@@ -212,6 +223,7 @@ public class NewBoidsSystem : MonoBehaviour
             r_vec.z = (gameObject.GetComponent<Transform>().position.z - boundry) - c_boid.GetComponent<Transform>().position.z;
         }
 
+        ///Failed experament i plan to try to get working at a later date. Intended to reduce the number of if statements and math of above section
         //if ((Mathf.Abs((gameObject.GetComponent<Transform>().position.x - (c_boid.GetComponent<Transform>().position.x))) > boundry))
         //{
         //    r_vec.x = Vec3NormalizeX(gameObject.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position) * (c_boid.GetComponent<Transform>().position.x - gameObject.GetComponent<Transform>().position.x);
@@ -229,7 +241,7 @@ public class NewBoidsSystem : MonoBehaviour
         //}
 
 
-        return r_vec/100;
+        return r_vec / 100; // returns the velocity needed to correct mistake
 
     }
 
@@ -240,15 +252,15 @@ public class NewBoidsSystem : MonoBehaviour
     /// <param name="c_boid"></param>
     Vector3 VelocityLimit(GameObject c_boid, Vector3 vel)
     {
-        if (l_vel > 0)
+        if (l_vel > 0) // Checks to see if velocity limit varible is less then 0
         {
-            if (Vec3Mag(vel) > l_vel)
-                return Vec3Normalize(vel) * (l_vel / 10);
-            else return vel;
+            if (Vec3Mag(vel) > l_vel) // checks to see if the magnitude of the velocity(None xyz velocity) is greater then the limit
+                return Vec3Normalize(vel) * (l_vel / 10); // returns a velocity that is lower then the limited velocity
+            else return vel; // returns the current velocity if it is not faster then limit
         }
 
 
-        else return Vector3.zero;
+        else return Vector3.zero; // Returns 0 to say that the velocity limit is 0
     }
 
 
@@ -266,10 +278,10 @@ public class NewBoidsSystem : MonoBehaviour
 
         foreach (GameObject b in go_boids)
             if (b != c_boid)
-                r_vec += b.GetComponent<Transform>().position;
+                r_vec += b.GetComponent<Transform>().position; 
 
 
-        return r_vec / (go_boids.Count - 1);
+        return r_vec / (go_boids.Count - 1); // standard percieved center returns the PC of all boids in the list
     }
     /// <summary>
     /// Simular to PercievedCenter exsept that it checks for Preditors and ignors them from the averaging of the positions
@@ -281,17 +293,17 @@ public class NewBoidsSystem : MonoBehaviour
         Vector3 r_vec = Vector3.zero;
         int n = 0;
         foreach (GameObject b in go_boids)
-            if (b != c_boid && b.GetComponent<Boid_Stats>().Preditor != true && Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_allign)
+            if (b != c_boid && b.GetComponent<Boid_Stats>().Preditor != true && Mathf.Abs(Vec3Mag(b.GetComponent<Transform>().position - c_boid.GetComponent<Transform>().position)) < d_allign) /// checks to see if the boid is close enough to a boid to get its percieved center along with makes sure boid is not a preditor
             {
                 r_vec += b.GetComponent<Transform>().position;
                 n++;
             }
 
         if (n > 0)
-            r_vec /= n;
-        else r_vec = Vector3.zero;
+            r_vec /= n; // returns the percived center(average of the math done above)^^
 
-        return r_vec;
+
+        return r_vec;  
     }
 
 
