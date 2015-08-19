@@ -17,19 +17,19 @@ public class CameraButton : MonoBehaviour
            gameObject.GetComponent<Transform>().parent = trans;
            gameObject.GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
            gameObject.GetComponent<Transform>().localPosition = new Vector3(0,.5f,.5f);
-           ButtonText.GetComponent<Text>().text = "Unfallow Boid";
+           ButtonText.GetComponent<Text>().text = "Unfollow Boid";
     
            fpc = true;
-           print("SHould be parented");
+           
        }
        else  if(fpc)
        {
            gameObject.GetComponent<Transform>().parent = null;
            gameObject.GetComponent<Transform>().position = new Vector3(0,0,-50);
            gameObject.GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
-           ButtonText.GetComponent<Text>().text = "Fallow Boid";
+           ButtonText.GetComponent<Text>().text = "Follow Boid";
            fpc = false;
-           print("SHould be unparented");
+           
        }
     }
 

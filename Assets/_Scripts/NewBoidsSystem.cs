@@ -108,7 +108,7 @@ public class NewBoidsSystem : MonoBehaviour
 
 
     /// <summary>
-    /// Instantiates gameobjects based on a delta timer
+    /// Instantiates gameobjects based on a timer
     /// </summary>
     void Spawning()
     {
@@ -133,7 +133,7 @@ public class NewBoidsSystem : MonoBehaviour
     }
 
      /// <param name="c_boid"></param>
-        /// <returns>Returns a value that is 1% closer the the percieved center of mass of the flock</returns>
+        /// <returns>Returns a value that is the distance between the boid and the perceived center multiplied by a modifier and devided by 100  </returns>
     Vector3 Cohesion(GameObject c_boid)
     {
         if (predignorPercievedCenter(c_boid) != Vector3.zero)
@@ -142,7 +142,7 @@ public class NewBoidsSystem : MonoBehaviour
         else return Vector3.zero;
     }
     /// <param name="c_boid"></param>
-    /// <returns>Returns a value that is 1% further away from a boid(s) that c_boid has gotten too close to</returns>
+    /// <returns>Returns a value that is the average distance away from boids its near multiplied by a modifier and devided by 100</returns>
     Vector3 Seperation(GameObject c_boid)
     {
         Vector3 r_vec = Vector3.zero;
@@ -156,7 +156,7 @@ public class NewBoidsSystem : MonoBehaviour
 
     }
     /// <param name="c_boid"></param>
-    /// <returns>Returns a value that is in the same Velocity as the nearby boids</returns>
+    /// <returns>Returns a value that is in the average velocity of near by boids</returns>
     Vector3 Allignment(GameObject c_boid)
     {
         Vector3 r_vec = Vector3.zero; 
@@ -247,7 +247,7 @@ public class NewBoidsSystem : MonoBehaviour
 
 
     /// <summary>
-    /// reduces the velocity if it exseds a set value
+    /// reduces the velocity if it exceeded a set value
     /// </summary>
     /// <param name="c_boid"></param>
     Vector3 VelocityLimit(GameObject c_boid, Vector3 vel)
